@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>新聞稿寫作特訓：架構背誦與轉化特訓 | Winnie老師的職業中文教室</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- 引入煙花特效庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+            --bg-color: #f8fafc;
+            --text-main: #334155;
+            
+            /* 公益類色系 */
+            --charity-main: #059669;
+            --hl-c-title: #d1fae5; 
+            --hl-c-lead: #a7f3d0; 
+            --hl-c-body: #ecfdf5; 
+            --hl-c-end: #f0fdf4;
+            
+            /* 商業類色系 */
+            --comm-main: #e11d48;
+            --hl-m-title: #ffe4e6; 
+            --hl-m-lead: #fecdd3; 
+            --hl-m-body: #fff1f2; 
+            --hl-m-end: #fff0f6;
+
+            /* 射擊遊戲色系 */
+            --shoot-main: #6d28d9;
+        }
+
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; overflow-x: hidden; touch-action: manipulation;}
+        
+        /* --- Main Navigation & Global Score --- */
+        .main-nav { background: var(--primary); padding: 15px 20px; display: flex; gap: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; justify-content: center; align-items: center;}
+        .main-nav-btn { background: rgba(255,255,255,0.1); border: 2px solid transparent; color: white; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 1.1rem; transition: 0.3s; }
+        .main-nav-btn:hover { background: rgba(255,255,255,0.2); }
+        .main-nav-btn.active { background: white; color: var(--primary); box-shadow: 0 0 15px rgba(255,255,255,0.4); }
+        
+        .global-score-board { background: #fef08a; color: #b45309; padding: 8px 20px; border-radius: 30px; font-weight: 900; font-size: 1.2rem; border: 2px solid #facc15; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 5px; margin-left: auto;}
+        
+        /* --- Floating Score Animation --- */
+        .score-anim { position: absolute; font-weight: 900; font-size: 2rem; pointer-events: none; animation: floatUp 1s forwards; z-index: 9999; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .score-plus { color: #10b981; }
+        .score-minus { color: #ef4444; }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-50px) scale(1.2); } }
+
+        .view-section { display: none; padding: 30px 20px; max-width: 950px; margin: 0 auto; animation: fadeIn 0.4s ease-out;}
+        .view-section.active { display: block; }
+        
+        .page { background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 30px;}
+        h2.page-title { color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 1.8rem;}
+        
+        .game-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;}
+        .game-header h2.page-title { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+        .local-tools { display: flex; align-items: center; gap: 10px; }
+        .local-score-board { background: #e0f2fe; color: #0369a1; padding: 8px 15px; border-radius: 20px; font-weight: bold; border: 2px solid #bae6fd; font-size: 1.1rem;}
+        .retry-btn { background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 1rem;}
+        .retry-btn:hover { background: #dc2626; transform: scale(1.05); }
+
+        /* --- Tabs (For Framework) --- */
+        .tab-container { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
+        .tab-btn { flex: 1; padding: 15px; font-size: 1.2rem; font-weight: 900; border: none; border-radius: 10px 10px 0 0; cursor: pointer; transition: 0.3s; background: #f1f5f9; color: #64748b;}
+        .tab-btn.active[data-type="charity"] { background: var(--charity-main); color: white; box-shadow: 0 -4px 10px rgba(5, 150, 105, 0.2); }
+        .tab-btn.active[data-type="commercial"] { background: var(--comm-main); color: white; box-shadow: 0 -4px 10px rgba(225, 29, 72, 0.2); }
+
+        .template-content { display: none; animation: fadeIn 0.4s ease-out; }
+        .template-content.active { display: block; }
+
+        /* --- Template Grid --- */
+        .template-grid { display: flex; flex-direction: column; gap: 15px; }
+        .t-row { background: white; border: 2px solid #cbd5e1; border-radius: 10px; overflow: hidden; position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.05);}
+        .t-header { padding: 12px 20px; font-weight: bold; color: #1e293b; display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; border-bottom: 2px solid #e2e8f0; flex-wrap: wrap; gap: 10px;}
+        .t-content { padding: 20px; font-size: 1.1rem; line-height: 2; }
+        .t-blank { display: inline-block; border-bottom: 2px solid var(--accent); color: var(--accent); font-weight: bold; padding: 0 10px; min-width: 60px; text-align: center; background: #fffbeb; margin: 0 5px;}
+        
+        .self-improve-btn { background: #f59e0b; color: #fff; border: none; padding: 6px 15px; border-radius: 15px; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 5px;}
+        .self-improve-btn:hover { background: #d97706; transform: scale(1.05); }
+
+        /* --- Game 1 & 2 Styles --- */
+        .game-step { border: 3px dashed #cbd5e1; border-radius: 15px; padding: 25px; margin-bottom: 20px; background: #f8fafc; display: none;}
+        .game-step.active { display: block; animation: fadeIn 0.5s; }
+        .step-title { color: var(--secondary); font-size: 1.4rem; margin-top: 0; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 20px;}
+        
+        .game-split { display: flex; gap: 20px; flex-wrap: wrap; }
+        .raw-data-panel { flex: 1.2; min-width: 350px; background: #e2e8f0; padding: 20px; border-radius: 10px; box-shadow: inset 0 4px 6px rgba(0,0,0,0.05); display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-content: start;}
+        .structure-panel { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 15px; }
+        
+        /* Document Card Styles (from index16) */
+        .doc-card { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; font-size: 0.95rem; line-height: 1.6;}
+        .doc-title { font-weight: 900; color: #475569; border-bottom: 2px solid #cbd5e1; padding-bottom: 5px; margin-bottom: 10px; font-size: 1rem; display: flex; align-items: center; gap: 5px;}
+        
+        .doc-memo { background: #fef08a; border-left: 4px solid #facc15; transform: rotate(-1deg);}
+        .doc-chat { background: #e0f2fe; border-radius: 15px 15px 15px 0; border: 1px solid #bae6fd;}
+        .doc-plan { background: #fff; border: 1px solid #e2e8f0; background-image: repeating-linear-gradient(transparent, transparent 24px, #e2e8f0 25px); background-position: 0 30px; line-height: 25px;}
+
+        .info-pill { display: inline-block; background: rgba(255,255,255,0.7); border: 2px solid #cbd5e1; color: #1e293b; padding: 2px 6px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; margin: 2px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); line-height: normal; }
+        .info-pill:hover { transform: translateY(-2px); border-color: var(--accent); background: #fffbeb;}
+        .info-pill.selected { background: var(--accent); color: white; border-color: #b45309; transform: scale(1.05); }
+        .info-pill.placed { opacity: 0; pointer-events: none; position: absolute; }
+
+        .s-box { background: white; border: 3px dashed #94a3b8; border-radius: 10px; padding: 15px; min-height: 70px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; transition: 0.3s; }
+        .s-box:hover { border-color: var(--secondary); background: #f0f9ff; }
+        .s-box-title { font-weight: 900; color: #64748b; font-size: 1rem; pointer-events: none; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px;}
+        .s-box-req { font-size: 0.85rem; color: #ef4444; font-weight: bold; pointer-events: none;}
+        .s-box.filled { border-style: solid; border-color: #10b981; background: #ecfdf5; pointer-events: none;}
+        .s-box.filled .s-box-title { color: #059669; border-bottom-color: #a7f3d0;}
+        .s-box.filled .s-box-req { display: none; }
+        .s-box .placed-pill { background: #10b981; color: white; padding: 8px 12px; border-radius: 6px; font-weight: bold; font-size: 0.95rem; animation: popIn 0.3s;}
+        
+        @keyframes popIn { 0% { transform: scale(0.8); } 100% { transform: scale(1); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
+
+        .expansion-text { font-size: 1.2rem; line-height: 2.2; color: #334155; background: white; padding: 25px; border-radius: 10px; border: 2px solid #e2e8f0; }
+        .raw-text-span { background: #fef08a; padding: 2px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #facc15;}
+        .news-select { font-size: 1.1rem; padding: 5px 10px; border: 2px solid var(--secondary); border-radius: 6px; color: var(--primary); font-weight: bold; cursor: pointer; outline: none; background: #eff6ff;}
+        .news-select.correct { border-color: #10b981; background: #dcfce3; color: #059669; pointer-events: none;}
+        .news-select.wrong { border-color: #ef4444; background: #fee2e2; color: #b91c1c; animation: shake 0.4s;}
+
+        .final-paragraph { background: white; padding: 40px 30px 30px; border-left: 6px solid var(--secondary); border-radius: 10px; font-size: 1.15rem; line-height: 2; color: #1e293b; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-indent: 2em; text-align: justify; position: relative;}
+        .news-release-header { text-align: center; font-size: 1.8rem; font-weight: 900; letter-spacing: 15px; color: #1e293b; margin-bottom: 25px; border-bottom: 3px double #cbd5e1; padding-bottom: 15px; text-indent: 0;}
+
+        .next-btn { background: var(--secondary); color: white; border: none; padding: 12px 30px; font-size: 1.2rem; font-weight: bold; border-radius: 30px; cursor: pointer; margin-top: 20px; transition: 0.2s; display: none; box-shadow: 0 4px 10px rgba(59,130,246,0.3);}
+        .next-btn:hover { background: #2563eb; transform: translateY(-2px); }
+
+        /* Modal Styles */
+        #improve-modal { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.85); z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        .modal-box { background: #fff; width: 90%; max-width: 800px; max-height: 85vh; border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.3); border: 3px solid #f59e0b; }
+        .modal-header { background: #fdf8f5; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; flex-shrink: 0; }
+        .modal-title { color: #b45309; font-size: 1.3rem; font-weight: 900; margin: 0; }
+        .modal-close { background: #ef4444; color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer; flex-shrink: 0; }
+        .modal-content { padding: 20px; overflow-y: auto; flex: 1; background: #f8fafc; }
+        .improve-item { background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
+        .improve-item:hover { border-color: #3b82f6; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .improve-phrase { padding: 15px; font-weight: bold; color: #1e3a8a; display: flex; justify-content: space-between; align-items: center; line-height: 1.5; }
+        .improve-phrase::after { content: '▼'; font-size: 0.8em; color: #94a3b8; margin-left: 10px; }
+        .improve-example { padding: 0 15px 15px 15px; color: #065f46; display: none; font-size: 1rem; border-top: 1px dashed #e2e8f0; margin-top: 5px; padding-top: 10px; line-height: 1.6;}
+        .improve-item.open .improve-example { display: block; animation: fadeIn 0.3s; }
+        .improve-item.open .improve-phrase::after { content: '▲'; }
+
+        /* ==================== Game 3: 3D Shooting Game Styles ==================== */
+        .g3-board { background: #e2e8f0; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center; border: 3px solid var(--shoot-main);}
+        .g3-sentence { font-size: 1.4rem; font-weight: bold; color: #1e293b; line-height: 2; margin-bottom: 15px;}
+        .g3-blank { display: inline-block; min-width: 80px; text-align: center; border-bottom: 3px solid var(--shoot-main); color: var(--shoot-main); margin: 0 5px; padding: 0 10px; background: #fff; border-radius: 5px 5px 0 0;}
+        .g3-blank.filled { background: var(--shoot-main); color: white; }
+        
+        .g3-progress { font-size: 1.1rem; color: #64748b; font-weight: bold;}
+        
+        /* 射擊區景觀 */
+        .shooting-container {
+            position: relative; width: 100%; height: 400px; background: radial-gradient(circle at center, #475569 0%, #1e293b 100%); border-radius: 10px; overflow: hidden; border: 4px solid #0f172a; cursor: crosshair; user-select: none; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        /* 漂浮的靶子 */
+        .target-word {
+            position: absolute; padding: 10px 20px; background: rgba(255,255,255,0.9); border: 2px solid #cbd5e1; border-radius: 8px; font-weight: 900; font-size: 1.1rem; color: #334155; transform: translate(-50%, -50%); transition: transform 0.2s, background 0.2s, box-shadow 0.2s; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.3); pointer-events: none; /* 讓容器接收事件 */
+        }
+        .target-word.hovered {
+            transform: translate(-50%, -50%) scale(1.6);
+            background: #fffbeb; border-color: var(--accent); color: #b45309;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.8);
+            z-index: 20;
+        }
+
+        /* 狙擊瞄準鏡 Overlay */
+        .scope-overlay {
+            position: absolute; width: 250px; height: 250px; border-radius: 50%; border: 6px solid #000; box-shadow: 0 0 0 3000px rgba(0,0,0,0.85), inset 0 0 20px rgba(0,0,0,0.5); transform: translate(-50%, -50%); pointer-events: none; z-index: 100; transition: width 0.1s, height 0.1s;
+        }
+        /* 十字準星 */
+        .scope-crosshair-h { position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: rgba(255,0,0,0.8); transform: translateY(-50%); pointer-events: none;}
+        .scope-crosshair-v { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,0,0,0.8); transform: translateX(-50%); pointer-events: none;}
+        /* 射擊特效 */
+        .shoot-flash { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(255,255,255,0.8); z-index: 200; pointer-events: none; opacity: 0; transition: opacity 0.1s;}
+
+        /* 控制按鈕區 */
+        .controls-panel { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 15px; flex-wrap: wrap;}
+        .d-pad { display: grid; grid-template-columns: 50px 50px 50px; grid-template-rows: 50px 50px 50px; gap: 5px; }
+        .d-btn { background: #334155; color: white; border: none; border-radius: 8px; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 0 #0f172a; display: flex; justify-content: center; align-items: center; user-select: none;}
+        .d-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0f172a; }
+        .d-up { grid-column: 2; grid-row: 1; }
+        .d-left { grid-column: 1; grid-row: 2; }
+        .d-right { grid-column: 3; grid-row: 2; }
+        .d-down { grid-column: 2; grid-row: 3; }
+        
+        .shoot-btn { background: #ef4444; color: white; border: none; border-radius: 50%; width: 100px; height: 100px; font-size: 1.5rem; font-weight: 900; cursor: pointer; box-shadow: 0 8px 0 #b91c1c; display: flex; justify-content: center; align-items: center; flex-direction: column; line-height: 1.2; user-select: none; transition: 0.1s;}
+        .shoot-btn:active { transform: translateY(8px); box-shadow: 0 0 0 #b91c1c; }
+
+        .g3-instructions { font-size: 0.95rem; color: #64748b; text-align: center; margin-top: 10px; font-weight: bold;}
+
+        @media (max-width: 768px) {
+            .raw-data-panel { grid-template-columns: 1fr; }
+            .global-score-board { margin-left: 0; width: 100%; justify-content: center; margin-top: 10px;}
+            .game-header { flex-direction: column; align-items: flex-start; }
+            .local-tools { width: 100%; justify-content: space-between; }
+            .shooting-container { height: 300px; }
+            .scope-overlay { width: 180px; height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Navigation -->
+    <div class="main-nav">
+        <button class="main-nav-btn active" onclick="switchMainView('view-framework', this)"><i class="fa-solid fa-book-open"></i> 萬用背誦架構</button>
+        <button class="main-nav-btn" onclick="switchMainView('view-game1', this)"><i class="fa-solid fa-hand-holding-heart"></i> 特訓一：公益類轉化</button>
+        <button class="main-nav-btn" onclick="switchMainView('view-game2', this)"><i class="fa-solid fa-store"></i> 特訓二：商業類轉化</button>
+        <button class="main-nav-btn" onclick="switchMainView('view-game3', this)"><i class="fa-solid fa-crosshairs"></i> 特訓三：狙擊填詞</button>
+        <div class="global-score-board"><i class="fa-solid fa-star"></i> 總分：<span id="global-score">0</span></div>
+    </div>
+
+    <!-- ==================== VIEW 1: Framework ==================== -->
+    <div id="view-framework" class="view-section active">
+        <div class="page">
+            <h2 class="page-title"><i class="fa-solid fa-pen-nib"></i> 商業新聞稿：雙軌背誦架構</h2>
+            <p style="font-size: 1.1rem; line-height: 1.6; color: #4a5568;">請根據考試題目的性質，點選下方的分類。公益類著重<b>意義與客觀感言</b>，商業類著重<b>賣點與客觀後續活動展出</b>。點擊「💡 自我增值」查看專屬的專業用詞與句型參考，並了解<b>套用結構示範</b>！</p>
+            
+            <div class="tab-container">
+                <button class="tab-btn active" data-type="charity" onclick="switchTab('charity')">🌱 公益活動類 (如: 籌款/共融計劃)</button>
+                <button class="tab-btn" data-type="commercial" onclick="switchTab('commercial')">🛍️ 商業活動類 (如: 商場活動/主題展)</button>
+            </div>
+
+            <!-- 公益類模板 -->
+            <div id="charity-template" class="template-content active">
+                <div class="template-grid">
+                    <div class="t-row">
+                        <div class="t-header" style="background: var(--hl-c-title);">
+                            1. 標題 (Title)
+                            <button class="self-improve-btn" onclick="openModal('c_title')">💡 標題與用詞</button>
+                        </div>
+                        <div class="t-content" style="text-align: center;">
+                            <span class="t-blank">主辦機構</span><span class="t-blank">公益活動名稱</span>活動 <span class="t-blank">動詞 (如:圓滿結束)</span> <br>
+                            <span class="t-blank" style="font-size: 0.95rem; margin-top: 10px;">(突顯數據/意義：共籌得善款 XXX 萬元 / 凝聚社會力量)</span>
+                        </div>
+                    </div>
+                    <div class="t-row">
+                        <div class="t-header" style="background: var(--hl-c-lead);">
+                            2. 導語 (Lead) - 5W1H 總覽
+                            <button class="self-improve-btn" onclick="openModal('c_lead')">💡 導語句式</button>
+                        </div>
+                        <div class="t-content">
+                            <span class="t-blank">主辦機構</span> 舉辦的 <span class="t-blank">公益活動名稱</span> 已於 <span class="t-blank">時間</span> 在 <span class="t-blank">地點</span> 順利舉行。是次活動 <span class="t-blank">成果 (如:成功為弱勢社群籌募經費)</span>，旨在 <span class="t-blank">深層目的 (如:推廣傷健共融的訊息)</span>。
+                        </div>
+                    </div>
+                    <div class="t-row">
+                        <div class="t-header" style="background: var(--hl-c-body);">
+                            3. 主體一 (Body 1) - 活動意義 ✕ 溫馨花絮
+                            <button class="self-improve-btn" onclick="openModal('c_body1')">💡 溫馨描寫秘訣</button>
+                        </div>
+                        <div class="t-content">
+                              <strong style="color: var(--charity-main);">小標題：<span class="t-blank">社會意義 (如: 寓做善事於運動 / 傳遞愛心)</span></strong><br>
+                              是次活動鼓勵大眾 <span class="t-blank">實踐理念 (如:身體力行參與公益)</span>。活動當日，現場 <span class="t-blank">溫馨氛圍 (如:充滿和諧融洽的氣氛)</span>。在 <span class="t-blank">重點環節 (如:起步儀式/分享環節)</span> 中，參與的市民與受惠者 <span class="t-blank">互動情況 (如:互相鼓勵/交流分享)</span>，深刻體現了活動 <span class="t-blank">呼應意義 (如:守望相助)</span> 的宗旨。
+                        </div>
+                    </div>
+                    <div class="t-row">
+                        <div class="t-header" style="background: var(--hl-c-body);">
+                            4. 主體二 (Body 2) - 焦點環節 ✕ 參加者感言
+                            <button class="self-improve-btn" onclick="openModal('c_body2')">💡 感言引述秘訣</button>
+                        </div>
+                        <div class="t-content">
+                              <strong style="color: var(--charity-main);">小標題：<span class="t-blank">正面迴響 (如: 獲益匪淺 備受啟發)</span></strong><br>
+                              參與 <span class="t-blank">焦點項目 (如:義工探訪/夢想實踐)</span> 的 <span class="t-blank">參加者身分與姓名</span> 受訪時指出，<span class="t-blank">客觀陳述過程 (如:能親手協助長者完成作品)</span>，讓他 <span class="t-blank">個人成長/感動 (如:感到深具意義)</span>。他/她亦強調，<span class="t-blank">社會呼籲 (如:共融社會需要大眾攜手打造)</span>，從中深受鼓舞。
+                        </div>
+                    </div>
+                    <div class="t-row">
+                        <div class="t-header" style="background: var(--hl-c-body);">
+                            5. 主體三 (Body 3) - 周邊環節 ✕ 嘉賓/客觀點評
+                            <button class="self-improve-btn" onclick="openModal('c_body3')">💡 延伸意義秘訣</button>
+                        </div>
+                        <div class="t-content">
+                              <strong style="color: var(--charity-main);">小標題：<span class="t-blank">延伸意義 (如: 傷健共融 樂在其中)</span></strong><br>
+                              除了主要項目，現場亦設有 <span class="t-blank">其他活動 (如:主題展覽/攤位遊戲)</span>，讓參與者 <span class="t-blank">互動情況 (如:透過遊戲加深對弱勢社群的了解)</span>。出席活動的 <span class="t-blank">嘉賓/受惠者身分與姓名</span> 亦表示，<span class="t-blank">客觀引述評價 (如:每個攤位的設計都充滿愛心)</span>，並期望 <span class="t-blank">未來願景 (如:社會能給予更多關注與支持)</span>。
+                        </div>
+                    </div>
+                    <div class="t-row">
+                        <div class="t-header" style="background: var(--hl-c-end);">
+                            6. 結尾 (Conclusion) - 官方致謝與承諾
+                            <button class="self-improve-btn" onclick="openModal('c_end')">💡 致謝與承諾</button>
+                        </div>
+                        <div class="t-content">
+                              <strong style="color: var(--charity-main);">小標題：<span class="t-blank">總結致謝 (如: 感謝各界 支持公益)</span></strong><br>
+                              <span class="t-blank">主辦機構</span> 代表 <span class="t-blank">姓名</span> 在總結致辭時，特別鳴謝 <span class="t-blank">感謝對象 (如:各協辦機構及慷慨解囊的市民)</span>。他透露，集團將繼續秉守誠信，<span class="t-blank">企業願景 (如:積極履行社會責任)</span>，並承諾來年會再接再厲，舉辦更多有益社會的活動。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 商業類模板 -->
+            <div id="commercial-template" class="template-content">
+                <div class="template-grid">
+                    <div class="t-row">
+                        <div class="t-header" style="background: var(--hl-m-title);">
+                            1. 標題 (Title)
+                            <button class="self-improve-btn" onclick="openModal('m_title')">💡 標題與用詞</button>
+                        </div>
+                        <div class="t-content" style="text-align: center;">
+                            <span class="t-blank">機構名稱</span> <span class="t-blank">推出/首創</span> <span class="t-blank">商業活動/產品名稱</span> <br>
+                            <span class="t-blank" style="font-size: 0.95rem; margin-top: 10px;">(突顯特色/賣點：全港首個 / 引發熱潮)</span>
+                        </div>
+                    </div>
+                    <div class="t-row">
+                        <div class="t-header" style="background: var(--hl-m-lead);">
+                            2. 導語 (Lead) - 5W1H 總覽
+                            <button class="self-improve-btn" onclick="openModal('m_lead')">💡 導語句式</button>
+                        </div>
+                        <div class="t-content">
+                            為 <span class="t-blank">商業目的 (如:為市民帶來嶄新體驗)</span>，<span class="t-blank">主辦機構</span> 舉辦的 <span class="t-blank">商業活動名稱</span> 於 <span class="t-blank">時間</span> 在 <span class="t-blank">地點</span> 盛大揭幕。是次活動以 <span class="t-blank">新聞價值 (如:全港首個虛擬實境展覽)</span> 為焦點，吸引大批市民參與。
+                        </div>
+                    </div>
+                    <div class="t-row">
+                        <div class="t-header" style="background: var(--hl-m-body);">
+                            3. 主體一 (Body 1) - 賣點亮點 ✕ 熱烈盛況
+                            <button class="self-improve-btn" onclick="openModal('m_body1')">💡 盛況描寫秘訣</button>
+                        </div>
+                        <div class="t-content">
+                              <strong style="color: var(--comm-main);">小標題：<span class="t-blank">賣點 + 動態 (如: 創新體驗 人頭湧湧)</span></strong><br>
+                              活動的重點環節 <span class="t-blank">最具吸引力的環節 (如:全天候開放的都市農莊)</span>，為市民帶來 <span class="t-blank">特色體驗 (如:五感治療的新鮮感受)</span>。開幕首日現場 <span class="t-blank">熱烈盛況 (如:人頭湧湧，氣氛高漲)</span>。不少市民 <span class="t-blank">具體動作 (如:有備而來/爭相體驗)</span>，大家均 <span class="t-blank">情緒描述 (如:玩得不亦樂乎/樂在其中)</span>。
+                        </div>
+                    </div>
+                    <div class="t-row">
+                        <div class="t-header" style="background: var(--hl-m-body);">
+                            4. 主體二 (Body 2) - 主要活動 ✕ 客觀好評
+                            <button class="self-improve-btn" onclick="openModal('m_body2')">💡 好評引述秘訣</button>
+                        </div>
+                        <div class="t-content">
+                              <strong style="color: var(--comm-main);">小標題：<span class="t-blank">好評焦點 (如: 備受讚賞 氣氛高漲)</span></strong><br>
+                              在 <span class="t-blank">另一主打環節 (如:街頭水戰派短)</span> 中，大批市民 <span class="t-blank">動態 (如:互相潑水送上祝福)</span>。第一次參加的 <span class="t-blank">參加者身分與姓名</span> 受訪時指出，<span class="t-blank">客觀陳述 (如:活動安排細心，互動環節十分刺激)</span>，讓人 <span class="t-blank">評價感受 (如:耳目一新/大開眼界)</span>。
+                        </div>
+                    </div>
+                    <div class="t-row">
+                        <div class="t-header" style="background: var(--hl-m-body);">
+                            5. 主體三 (Body 3) - 延伸體驗 ✕ 參與者感想
+                            <button class="self-improve-btn" onclick="openModal('m_body3')">💡 延伸體驗秘訣</button>
+                        </div>
+                        <div class="t-content">
+                              <strong style="color: var(--comm-main);">小標題：<span class="t-blank">延伸亮點 (如: 體驗豐富 滿載而歸)</span></strong><br>
+                              除了主要項目，主辦機構更特設 <span class="t-blank">周邊活動 (如:特色打卡位/綠色工作坊)</span>，吸引市民 <span class="t-blank">動態描述 (如:駐足觀賞/親手製作紀念品)</span>。帶同孩子參與的 <span class="t-blank">參加者身分與姓名</span> 認為，<span class="t-blank">轉述客觀評價 (如:活動極具教育意義，市集產品琳瑯滿目)</span>，讓他們 <span class="t-blank">總結體驗 (如:度過了一個充實的週末，滿載而歸)</span>。
+                        </div>
+                    </div>
+                    <div class="t-row">
+                        <div class="t-header" style="background: var(--hl-m-end);">
+                            6. 結尾 (Conclusion) - 官方致謝與客觀資訊
+                            <button class="self-improve-btn" onclick="openModal('m_end')">💡 新聞客觀結尾秘訣</button>
+                        </div>
+                        <div class="t-content">
+                              <strong style="color: var(--comm-main);">小標題：<span class="t-blank">後續活動 (如: 精彩節目 陸續有來)</span></strong><br>
+                              <span class="t-blank">主辦機構</span> 代表表示，對市民的熱烈反應感到滿意，並感謝各界支持。為讓更多市民參與，商場/大會將於 <span class="t-blank">時間 (如:一連四個週末)</span> 舉辦 <span class="t-blank">相關延伸活動 (如:低碳生活市集/露營嘉年華)</span>，並 <span class="t-blank">客觀提供活動資訊 (如:展出多款即製素食、延長開放至晚上九時)</span>，供市民 <span class="t-blank">客觀行動 (如:參觀體驗/休閒放鬆)</span>。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== VIEW 2: Game Charity ==================== -->
+    <div id="view-game1" class="view-section">
+        <div class="page">
+            <div class="game-header" style="border-color: var(--charity-main);">
+                <h2 class="page-title" style="color: var(--charity-main);"><i class="fa-solid fa-hand-holding-heart"></i> 實戰特訓一：情報轉化 (公益類)</h2>
+                <div class="local-tools">
+                    <div class="local-score-board">本關得分：<span id="g1-score">0</span></div>
+                    <button class="retry-btn" onclick="resetGame('g1')">🔄 重新挑戰</button>
+                </div>
+            </div>
+            <p style="font-size: 1.1rem; color: #4a5568;">幫助那些不知從何下筆的同學！從凌亂的備忘錄中找出有用的情報放入正確的結構，再加入專業動詞擴寫，體驗資料變身為專業新聞稿的過程！</p>
+            
+            <!-- Step 1: Sorting -->
+            <div id="g1-step1" class="game-step active">
+                <h3 class="step-title" style="color: var(--charity-main); border-color: var(--charity-main);">第一步：尋找並分類情報 🔍</h3>
+                <p>請點擊左側【活動備忘錄】內的情報標籤，然後點擊右側對應的【新聞稿結構區塊】放入。(答對 <span style="color:#10b981; font-weight:bold;">+2分</span>，答錯 <span style="color:#ef4444; font-weight:bold;">-1分</span>)</p>
+                <div class="game-split">
+                    <div class="raw-data-panel">
+                        <!-- Doc 1: 專案目標 -->
+                        <div class="doc-card doc-plan">
+                            <div class="doc-title"><i class="fa-solid fa-bullseye"></i> 專案企劃書</div>
+                            標題：<span class="info-pill" id="c_p0" onclick="selectPill('c_p0', this)">愛心基金會「寒冬送暖」籌得30萬</span><br>
+                            主辦機構：<span class="info-pill" id="c_p1" onclick="selectPill('c_p1', this)">愛心基金會</span><br>
+                            目的：<span class="info-pill" id="c_p2" onclick="selectPill('c_p2', this)">為獨居長者籌募寒衣經費</span>
+                        </div>
+                        <!-- Doc 2: 設施與活動 -->
+                        <div class="doc-card doc-memo">
+                            <div class="doc-title"><i class="fa-solid fa-list-check"></i> 活動紀錄</div>
+                            時間：<span class="info-pill" id="c_p8" onclick="selectPill('c_p8', this)">昨日</span><br>
+                            地點：<span class="info-pill" id="c_p9" onclick="selectPill('c_p9', this)">愛心社區中心</span><br>
+                            成果：<span class="info-pill" id="c_p3" onclick="selectPill('c_p3', this)">成功籌得 30 萬善款</span><br>
+                            花絮：<span class="info-pill" id="c_p4" onclick="selectPill('c_p4', this)">500名義工與長者齊齊織頸巾，互相鼓勵</span><br>
+                            延伸：<span class="info-pill" id="c_p7" onclick="selectPill('c_p7', this)">同場設有保暖衣物派發站，惠及超過一千名長者</span>
+                        </div>
+                        <!-- Doc 3: 回響與致謝 -->
+                        <div class="doc-card doc-chat">
+                            <div class="doc-title"><i class="fa-solid fa-comments"></i> 訪問與致謝紀錄</div>
+                            感言：<span class="info-pill" id="c_p5" onclick="selectPill('c_p5', this)">受惠者陳伯伯說很感動，覺得社會沒有忘記他們</span><br>
+                            致謝：<span class="info-pill" id="c_p6" onclick="selectPill('c_p6', this)">主席感謝市民捐款，承諾繼續服務弱勢社群</span>
+                        </div>
+                    </div>
+                    <div class="structure-panel">
+                        <div class="s-box" id="box-c-title" onclick="dropPill(this, 'box-c-title', ['c_p0'], 'g1')">
+                            <div class="s-box-title">📍 標題區</div>
+                            <div class="s-box-req">(提示：這篇新聞稿的主題和成績是什麼？)</div>
+                        </div>
+                        <div class="s-box" id="box-c-lead" onclick="dropPill(this, 'box-c-lead', ['c_p1', 'c_p2', 'c_p3', 'c_p8', 'c_p9'], 'g1')">
+                            <div class="s-box-title">📍 導語區</div>
+                            <div class="s-box-req">(提示：找找看主辦方、目的、成果、時間和地點)</div>
+                        </div>
+                        <div class="s-box" id="box-c-body1" onclick="dropPill(this, 'box-c-body1', ['c_p4'], 'g1')">
+                            <div class="s-box-title">📍 主體一</div>
+                            <div class="s-box-req">(提示：尋找現場義工與長者互動的溫馨畫面)</div>
+                        </div>
+                        <div class="s-box" id="box-c-body2" onclick="dropPill(this, 'box-c-body2', ['c_p5'], 'g1')">
+                            <div class="s-box-title">📍 主體二</div>
+                            <div class="s-box-req">(提示：哪裡有提到參與者的真實感受？)</div>
+                        </div>
+                        <div class="s-box" id="box-c-body3" onclick="dropPill(this, 'box-c-body3', ['c_p7'], 'g1')">
+                            <div class="s-box-title">📍 主體三</div>
+                            <div class="s-box-req">(提示：除了主要活動，還有什麼惠及大眾的延伸安排？)</div>
+                        </div>
+                        <div class="s-box" id="box-c-end" onclick="dropPill(this, 'box-c-end', ['c_p6'], 'g1')">
+                            <div class="s-box-title">📍 結尾區</div>
+                            <div class="s-box-req">(提示：官方最後要向誰致謝並給出什麼承諾？)</div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn-g1-next1" class="next-btn" style="background: var(--charity-main);" onclick="showStep('g1-step2')">情報收集完畢！進入擴寫階段 ➡️</button>
+            </div>
+
+            <!-- Step 2: Expansion -->
+            <div id="g1-step2" class="game-step">
+                <h3 class="step-title" style="color: var(--charity-main); border-color: var(--charity-main);">第二步：加入專業詞彙擴寫 ✍️</h3>
+                <p>資料都放好位置了！請從下拉選單中選擇正確的「專業新聞詞彙」，將零散的資料串連成正式的句子。(答對 <span style="color:#10b981; font-weight:bold;">+2分</span>，答錯 <span style="color:#ef4444; font-weight:bold;">-1分</span>)</p>
+                
+                <div class="expansion-text">
+                    <div style="text-align: center; font-size: 1.4rem; font-weight: bold; margin-bottom: 20px;">
+                        <select class="news-select" id="g1-s0" onchange="handleSelect(this, 'g1', ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8'])">
+                            <option value="">(請選擇)</option><option value="correct">愛心基金會</option><option value="wrong">無名氏</option>
+                        </select>
+                        「寒冬送暖」活動
+                        <select class="news-select" id="g1-s0b" onchange="handleSelect(this, 'g1', ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8'])">
+                            <option value="">(請選擇)</option><option value="wrong">無人問津</option><option value="correct">圓滿結束</option>
+                        </select><br>
+                        <span class="raw-text-span" style="font-size: 1.1rem;">共籌得 30 萬善款</span>
+                    </div>
+
+                    由 <span class="raw-text-span">愛心基金會</span> 
+                    <select class="news-select" id="g1-s1" onchange="handleSelect(this, 'g1', ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8'])">
+                        <option value="">(請選擇)</option><option value="correct">舉辦的</option><option value="wrong">隨便搞的</option>
+                    </select>
+                    「寒冬送暖」活動，已於 <span class="raw-text-span">昨日</span> 在 <span class="raw-text-span">愛心社區中心</span>
+                    <select class="news-select" id="g1-s2" onchange="handleSelect(this, 'g1', ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8'])">
+                        <option value="">(請選擇)</option><option value="wrong">突然中斷</option><option value="correct">順利舉行</option>
+                    </select>
+                    。是次活動成功 <span class="raw-text-span">籌得 30 萬善款</span>，
+                    <select class="news-select" id="g1-s3" onchange="handleSelect(this, 'g1', ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8'])">
+                        <option value="">(請選擇)</option><option value="correct">旨在</option><option value="wrong">想著</option>
+                    </select>
+                    <span class="raw-text-span">為獨居長者籌募寒衣經費</span>。
+                    <br><br>
+                    活動當日，現場 
+                    <select class="news-select" id="g1-s4" onchange="handleSelect(this, 'g1', ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8'])">
+                        <option value="">(請選擇)</option><option value="correct">氣氛融洽</option><option value="wrong">亂七八糟</option>
+                    </select>
+                    。500名義工 
+                    <select class="news-select" id="g1-s5" onchange="handleSelect(this, 'g1', ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8'])">
+                        <option value="">(請選擇)</option><option value="wrong">袖手旁觀</option><option value="correct">身體力行</option>
+                    </select>
+                    參與，<span class="raw-text-span">與長者齊齊織頸巾，互相鼓勵</span>。
+                    受惠者陳伯伯受訪時
+                    <select class="news-select" id="g1-s6" onchange="handleSelect(this, 'g1', ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8'])">
+                        <option value="">(請選擇)</option><option value="correct">指出</option><option value="wrong">大聲宣告</option>
+                    </select>
+                    ，感受到社會的關愛，令他 
+                    <select class="news-select" id="g1-s7" onchange="handleSelect(this, 'g1', ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8'])">
+                        <option value="">(請選擇)</option><option value="wrong">大吃一驚</option><option value="correct">深受鼓舞</option>
+                    </select>
+                    。
+                    <br><br>
+                    除了主要項目，同場亦 
+                    <select class="news-select" id="g1-s9" onchange="handleSelect(this, 'g1', ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8'])">
+                        <option value="">(請選擇)</option><option value="correct">設有</option><option value="wrong">關閉了</option>
+                    </select>
+                    <span class="raw-text-span">保暖衣物派發站</span>，
+                    <select class="news-select" id="g1-s10" onchange="handleSelect(this, 'g1', ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8'])">
+                        <option value="">(請選擇)</option><option value="correct">惠及</option><option value="wrong">冷落</option>
+                    </select>
+                    <span class="raw-text-span">超過一千名長者</span>，場面感人。
+                    <br><br>
+                    <span class="raw-text-span">主席感謝市民捐款</span>，並在總結時承諾，集團將繼續 
+                    <select class="news-select" id="g1-s8" onchange="handleSelect(this, 'g1', ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8'])">
+                        <option value="">(請選擇)</option><option value="correct">積極履行社會責任</option><option value="wrong">追求最高利潤</option>
+                    </select>
+                    ，<span class="raw-text-span">服務弱勢社群</span>。
+                </div>
+                <button id="btn-g1-next2" class="next-btn" style="background: var(--charity-main);" onclick="showStep('g1-step3')">擴寫完美！查看最終成果 ➡️</button>
+            </div>
+
+            <!-- Step 3: Final Paragraph -->
+            <div id="g1-step3" class="game-step">
+                <h3 class="step-title" style="color: var(--charity-main); border-color: var(--charity-main);">第三步：大功告成！🎉</h3>
+                <p>這就是將「零散資料」結合「專業詞彙」與「正確結構」後產生的專業新聞稿！</p>
+                <div class="final-paragraph" style="border-left-color: var(--charity-main);">
+                    <div class="news-release-header" style="text-align: center; font-size: 1.8rem; font-weight: 900; letter-spacing: 15px; color: #1e293b; margin-bottom: 25px; border-bottom: 3px double #cbd5e1; padding-bottom: 15px;">新 聞 稿</div>
+                    <div style="text-align: center; font-size: 1.4rem; font-weight: bold; margin-bottom: 20px; color: #1e293b;">
+                        愛心基金會「寒冬送暖」活動圓滿結束<br>
+                        <span style="font-size: 1.1rem; color: #4a5568;">共籌得 30 萬善款</span>
+                    </div>
+                    由愛心基金會舉辦的「寒冬送暖」活動，已於昨日在愛心社區中心順利舉行。是次活動成功籌得 30 萬善款，旨在為獨居長者籌募寒衣經費。
+                    <br><br>
+                    活動當日，現場氣氛融洽。500名義工身體力行參與，與長者齊齊織頸巾，互相鼓勵。受惠者陳伯伯受訪時指出，感受到社會的關愛，令他深受鼓舞。
+                    <br><br>
+                    除了主要項目，同場亦設有保暖衣物派發站，惠及超過一千名長者，場面感人。
+                    <br><br>
+                    主席感謝市民捐款，並在總結時承諾，集團將繼續積極履行社會責任，服務弱勢社群。
+                </div>
+                <p style="font-size: 0.9rem; color: #64748b; margin-top: 15px; text-align: center;">(請注意！此為短篇商業新聞稿示範，商業新聞稿寫作評核的字數與篇幅須符合要求。)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== VIEW 3: Game Commercial ==================== -->
+    <div id="view-game2" class="view-section">
+        <div class="page">
+            <div class="game-header" style="border-color: var(--comm-main);">
+                <h2 class="page-title" style="color: var(--comm-main);"><i class="fa-solid fa-store"></i> 實戰特訓二：情報轉化 (商業類)</h2>
+                <div class="local-tools">
+                    <div class="local-score-board">本關得分：<span id="g2-score">0</span></div>
+                    <button class="retry-btn" onclick="resetGame('g2')">🔄 重新挑戰</button>
+                </div>
+            </div>
+            <p style="font-size: 1.1rem; color: #4a5568;">商業類的新聞稿結尾與公益類大不相同！請試著找出正確的情報，放入對應的結構中，並體驗如何客觀地進行後續活動宣傳。</p>
+            
+            <!-- Step 1: Sorting -->
+            <div id="g2-step1" class="game-step active">
+                <h3 class="step-title" style="color: var(--comm-main); border-color: var(--comm-main);">第一步：尋找並分類情報 🔍</h3>
+                <p>請點擊左側【活動備忘錄】內的情報標籤，然後點擊右側對應的【新聞稿結構區塊】放入。(答對 <span style="color:#10b981; font-weight:bold;">+2分</span>，答錯 <span style="color:#ef4444; font-weight:bold;">-1分</span>)</p>
+                <div class="game-split">
+                    <div class="raw-data-panel">
+                        <!-- Doc 1: 專案目標 -->
+                        <div class="doc-card doc-plan">
+                            <div class="doc-title"><i class="fa-solid fa-bullseye"></i> 專案企劃書</div>
+                            標題：<span class="info-pill" style="border-color: var(--comm-main); color: var(--comm-main); background: #fff1f2;" id="m_p0" onclick="selectPill('m_p0', this)">星際科技首創 AI 太空艙體驗展</span><br>
+                            新聞價值：<span class="info-pill" style="border-color: var(--comm-main); color: var(--comm-main); background: #fff1f2;" id="m_p1" onclick="selectPill('m_p1', this)">全港首個 AI 虛擬實境太空艙</span><br>
+                            目的：<span class="info-pill" style="border-color: var(--comm-main); color: var(--comm-main); background: #fff1f2;" id="m_p2" onclick="selectPill('m_p2', this)">為市民帶來結合科技與娛樂的新體驗</span>
+                        </div>
+                        <!-- Doc 2: 設施與活動 -->
+                        <div class="doc-card doc-memo">
+                            <div class="doc-title"><i class="fa-solid fa-list-check"></i> 現場盛況紀錄</div>
+                            時間：<span class="info-pill" style="border-color: var(--comm-main); color: var(--comm-main); background: #fff1f2;" id="m_p8" onclick="selectPill('m_p8', this)">昨日</span><br>
+                            地點：<span class="info-pill" style="border-color: var(--comm-main); color: var(--comm-main); background: #fff1f2;" id="m_p9" onclick="selectPill('m_p9', this)">會展中心</span><br>
+                            盛況：<span class="info-pill" style="border-color: var(--comm-main); color: var(--comm-main); background: #fff1f2;" id="m_p3" onclick="selectPill('m_p3', this)">大批市民排隊爭相體驗，人頭湧湧</span><br>
+                            延伸：<span class="info-pill" style="border-color: var(--comm-main); color: var(--comm-main); background: #fff1f2;" id="m_p7" onclick="selectPill('m_p7', this)">會場特設「星際打卡區」，吸引大批家庭客駐足拍照</span>
+                        </div>
+                        <!-- Doc 3: 公關回饋 -->
+                        <div class="doc-card doc-chat">
+                            <div class="doc-title"><i class="fa-solid fa-comments"></i> 公關回饋與後續</div>
+                            好評：<span class="info-pill" style="border-color: var(--comm-main); color: var(--comm-main); background: #fff1f2;" id="m_p4" onclick="selectPill('m_p4', this)">顧客張小姐指出視覺效果震撼，猶如置身太空</span><br>
+                            宣傳：<span class="info-pill" style="border-color: var(--comm-main); color: var(--comm-main); background: #fff1f2;" id="m_p5" onclick="selectPill('m_p5', this)">展覽將延長開放至下月底，並提供多個打卡位</span>
+                        </div>
+                    </div>
+                    <div class="structure-panel">
+                        <div class="s-box" id="box-m-title" onclick="dropPill(this, 'box-m-title', ['m_p0'], 'g2')">
+                            <div class="s-box-title">📍 標題區</div>
+                            <div class="s-box-req">(提示：這項商業活動的名稱是什麼？)</div>
+                        </div>
+                        <div class="s-box" id="box-m-lead" onclick="dropPill(this, 'box-m-lead', ['m_p1', 'm_p2', 'm_p8', 'm_p9'], 'g2')">
+                            <div class="s-box-title">📍 導語區</div>
+                            <div class="s-box-req">(提示：活動目的、新聞價值、時間和地點)</div>
+                        </div>
+                        <div class="s-box" id="box-m-body1" onclick="dropPill(this, 'box-m-body1', ['m_p3'], 'g2')">
+                            <div class="s-box-title">📍 主體一</div>
+                            <div class="s-box-req">(提示：尋找能證明活動受歡迎的人潮盛況)</div>
+                        </div>
+                        <div class="s-box" id="box-m-body2" onclick="dropPill(this, 'box-m-body2', ['m_p4'], 'g2')">
+                            <div class="s-box-title">📍 主體二</div>
+                            <div class="s-box-req">(提示：哪裡有顧客對產品/活動的具體好評？)</div>
+                        </div>
+                        <div class="s-box" id="box-m-body3" onclick="dropPill(this, 'box-m-body3', ['m_p7'], 'g2')">
+                            <div class="s-box-title">📍 主體三</div>
+                            <div class="s-box-req">(提示：大會還為家庭客準備了什麼打卡延伸體驗？)</div>
+                        </div>
+                        <div class="s-box" id="box-m-end" onclick="dropPill(this, 'box-m-end', ['m_p5'], 'g2')">
+                            <div class="s-box-title">📍 結尾區</div>
+                            <div class="s-box-req">(提示：客觀地列出展覽後續的開放時間和資訊)</div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn-g2-next1" class="next-btn" style="background: var(--comm-main);" onclick="showStep('g2-step2')">情報收集完畢！進入擴寫階段 ➡️</button>
+            </div>
+
+            <!-- Step 2: Expansion -->
+            <div id="g2-step2" class="game-step">
+                <h3 class="step-title" style="color: var(--comm-main); border-color: var(--comm-main);">第二步：加入專業詞彙擴寫 ✍</h3>
+                <p>資料都放好位置了！請從下拉選單中選擇正確的「專業新聞詞彙」，將零散的資料串連成正式的句子。(答對 <span style="color:#10b981; font-weight:bold;">+2分</span>，答錯 <span style="color:#ef4444; font-weight:bold;">-1分</span>)</p>
+                
+                <div class="expansion-text">
+                    <div style="text-align: center; font-size: 1.4rem; font-weight: bold; margin-bottom: 20px;">
+                        <select class="news-select" id="g2-s0" onchange="handleSelect(this, 'g2', ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'])">
+                            <option value="">(請選擇)</option><option value="correct">星際科技</option><option value="wrong">不知名公司</option>
+                        </select>
+                        <select class="news-select" id="g2-s0b" onchange="handleSelect(this, 'g2', ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'])">
+                            <option value="">(請選擇)</option><option value="wrong">秘密測試</option><option value="correct">首創</option>
+                        </select>
+                        <span class="raw-text-span" style="font-size: 1.1rem;">AI 太空艙體驗展</span>
+                    </div>
+
+                    <span class="raw-text-span">為市民帶來結合科技與娛樂的新體驗</span>，<span class="raw-text-span">星際科技</span> 舉辦的 AI 體驗展於 <span class="raw-text-span">昨日</span> 在 <span class="raw-text-span">會展中心</span> 
+                    <select class="news-select" id="g2-s1" onchange="handleSelect(this, 'g2', ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'])">
+                        <option value="">(請選擇)</option><option value="correct">盛大揭幕</option><option value="wrong">草草了事</option>
+                    </select>
+                    。是次活動的焦點為 <span class="raw-text-span">全港首個 AI 虛擬實境太空艙</span>，
+                    <select class="news-select" id="g2-s1b" onchange="handleSelect(this, 'g2', ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'])">
+                        <option value="">(請選擇)</option><option value="correct">吸引大批市民</option><option value="wrong">無人問津</option>
+                    </select>
+                    參與。
+                    <br><br>
+                    開幕首日現場 
+                    <select class="news-select" id="g2-s2" onchange="handleSelect(this, 'g2', ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'])">
+                        <option value="">(請選擇)</option><option value="wrong">冷冷清清</option><option value="correct">人頭湧湧</option>
+                    </select>
+                    。<span class="raw-text-span">大批市民排隊</span> 
+                    <select class="news-select" id="g2-s3" onchange="handleSelect(this, 'g2', ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'])">
+                        <option value="">(請選擇)</option><option value="correct">爭相體驗</option><option value="wrong">避之則吉</option>
+                    </select>
+                    ，氣氛相當熱烈。
+                    <br><br>
+                    顧客張小姐 
+                    <select class="news-select" id="g2-s4" onchange="handleSelect(this, 'g2', ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'])">
+                        <option value="">(請選擇)</option><option value="correct">指出</option><option value="wrong">大聲尖叫</option>
+                    </select>
+                    ，<span class="raw-text-span">視覺效果震撼，猶如置身太空</span>，令人 
+                    <select class="news-select" id="g2-s5" onchange="handleSelect(this, 'g2', ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'])">
+                        <option value="">(請選擇)</option><option value="wrong">感到沉悶</option><option value="correct">大開眼界</option>
+                    </select>
+                    。
+                    <br><br>
+                    除了主要展區，會場亦 
+                    <select class="news-select" id="g2-s8" onchange="handleSelect(this, 'g2', ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'])">
+                        <option value="">(請選擇)</option><option value="correct">特設</option><option value="wrong">拆除了</option>
+                    </select>
+                    <span class="raw-text-span">「星際打卡區」</span>，成功 
+                    <select class="news-select" id="g2-s9" onchange="handleSelect(this, 'g2', ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'])">
+                        <option value="">(請選擇)</option><option value="wrong">趕走</option><option value="correct">吸引</option>
+                    </select>
+                    <span class="raw-text-span">大批家庭客駐足拍照</span>，場面溫馨。
+                    <br><br>
+                    為讓更多市民參與，<span class="raw-text-span">展覽將</span> 
+                    <select class="news-select" id="g2-s6" onchange="handleSelect(this, 'g2', ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'])">
+                        <option value="">(請選擇)</option><option value="correct">延長開放</option><option value="wrong">提早結束</option>
+                    </select>
+                    <span class="raw-text-span">至下月底</span>，並 
+                    <select class="news-select" id="g2-s7" onchange="handleSelect(this, 'g2', ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'])">
+                        <option value="">(請选择)</option><option value="wrong">趕走所有客人</option><option value="correct">提供多個打卡位</option>
+                    </select>
+                    供市民參觀。
+                </div>
+                <button id="btn-g2-next2" class="next-btn" style="background: var(--comm-main);" onclick="showStep('g2-step3')">擴寫完美！查看最終成果 ➡️</button>
+            </div>
+
+            <!-- Step 3: Final Paragraph -->
+            <div id="g2-step3" class="game-step">
+                <h3 class="step-title" style="color: var(--comm-main); border-color: var(--comm-main);">第三步：大功告成！🎉</h3>
+                <p>這就是將「零散資料」結合「專業詞彙」與「正確結構」後產生的專業新聞稿！</p>
+                <div class="final-paragraph" style="border-left-color: var(--comm-main);">
+                    <div class="news-release-header" style="text-align: center; font-size: 1.8rem; font-weight: 900; letter-spacing: 15px; color: #1e293b; margin-bottom: 25px; border-bottom: 3px double #cbd5e1; padding-bottom: 15px;">新 聞 稿</div>
+                    <div style="text-align: center; font-size: 1.4rem; font-weight: bold; margin-bottom: 20px; color: #1e293b;">
+                        星際科技首創 AI 太空艙體驗展
+                    </div>
+                    為市民帶來結合科技與娛樂的新體驗，星際科技舉辦的 AI 體驗展於昨日在會展中心盛大揭幕。是次活動的焦點為全港首個 AI 虛擬實境太空艙，吸引大批市民參與。
+                    <br><br>
+                    開幕首日現場人頭湧湧。大批市民排隊爭相體驗，氣氛相當熱烈。顧客張小姐指出，視覺效果震撼，猶如置身太空，令人大開眼界。
+                    <br><br>
+                    除了主要展區，會場亦特設「星際打卡區」，成功吸引大批家庭客駐足拍照，場面溫馨。
+                    <br><br>
+                    為讓更多市民參與，展覽將延長開放至下月底，並提供多個打卡位供市民參觀。
+                </div>
+                <p style="font-size: 0.9rem; color: #64748b; margin-top: 15px; text-align: center;">(請注意！此為短篇商業新聞稿示範，商業新聞稿寫作評核的字數與篇幅須符合要求。)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== VIEW 4: Game 3 (3D Shooting) ==================== -->
+    <div id="view-game3" class="view-section">
+        <div class="page">
+            <div class="game-header" style="border-color: var(--shoot-main);">
+                <h2 class="page-title" style="color: var(--shoot-main);"><i class="fa-solid fa-crosshairs"></i> 特訓三：狙擊填詞 (常用句式)</h2>
+                <div class="local-tools">
+                    <div class="local-score-board" style="background: #ede9fe; color: #5b21b6; border-color: #ddd6fe;">本關得分：<span id="g3-score">0</span></div>
+                    <button class="retry-btn" onclick="initGame3()" style="background: #8b5cf6;">🔄 重新挑戰</button>
+                </div>
+            </div>
+            <p style="font-size: 1.1rem; color: #4a5568;">請透過滑鼠、螢幕滑動或下方十字鍵移動狙擊鏡。依照句子空格的順序 (先射擊填空1，再射擊填空2)，瞄準漂浮的正確詞彙並按下「射擊」！答對 <span style="color:#10b981; font-weight:bold;">+2分</span>，答錯 <span style="color:#ef4444; font-weight:bold;">-1分</span>。</p>
+            
+            <div class="g3-board">
+                <div class="g3-progress">題數：<span id="g3-qnum">1 / 10</span></div>
+                <div class="g3-sentence" id="g3-sentence">
+                    載入中...
+                </div>
+            </div>
+
+            <div class="shooting-container" id="shooting-container">
+                <div id="targets-layer"></div>
+                <div class="scope-overlay" id="scope">
+                    <div class="scope-crosshair-h"></div>
+                    <div class="scope-crosshair-v"></div>
+                </div>
+                <div class="shoot-flash" id="shoot-flash"></div>
+            </div>
+
+            <div class="controls-panel">
+                <div class="d-pad">
+                    <button class="d-btn d-up" onmousedown="startMove(0, -1)" onmouseup="stopMove()" ontouchstart="startMove(0, -1)" ontouchend="stopMove()"><i class="fa-solid fa-caret-up"></i></button>
+                    <button class="d-btn d-left" onmousedown="startMove(-1, 0)" onmouseup="stopMove()" ontouchstart="startMove(-1, 0)" ontouchend="stopMove()"><i class="fa-solid fa-caret-left"></i></button>
+                    <button class="d-btn d-right" onmousedown="startMove(1, 0)" onmouseup="stopMove()" ontouchstart="startMove(1, 0)" ontouchend="stopMove()"><i class="fa-solid fa-caret-right"></i></button>
+                    <button class="d-btn d-down" onmousedown="startMove(0, 1)" onmouseup="stopMove()" ontouchstart="startMove(0, 1)" ontouchend="stopMove()"><i class="fa-solid fa-caret-down"></i></button>
+                </div>
+                <button class="shoot-btn" onclick="shoot()"><i class="fa-solid fa-crosshairs"></i><span style="font-size:0.9rem;">射擊</span></button>
+            </div>
+            <p class="g3-instructions">提示：也可以直接在射擊區內拖曳或使用鍵盤 (↑↓←→ 方向鍵，空白鍵射擊)</p>
+        </div>
+    </div>
+
+    <!-- Modal for Self-Improvement -->
+    <div id="improve-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 class="modal-title" id="im-title">自我增值：專業詞彙與句型參考</h3>
+                <button class="modal-close" onclick="closeModalWindow()">X</button>
+            </div>
+            <div class="modal-content" id="im-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- 射擊音效生成 (使用 Web Audio API，無需外部音檔) ---
+        function playShootSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const audioCtx = new AudioContext();
+                
+                // 產生白噪音 (模擬子彈擊發聲)
+                const bufferSize = audioCtx.sampleRate * 0.1; // 0.1 秒的聲音
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                
+                // 快速衰減的音量控制 (產生「砰」的短促效果)
+                const gainNode = audioCtx.createGain();
+                gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                
+                noise.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                noise.start(audioCtx.currentTime);
+            } catch(e) {
+                console.log("瀏覽器不支援 AudioContext 音效", e);
+            }
+        }
+
+        // --- 煙花特效生成 ---
+        function fireworksEffect() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
+
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) { return clearInterval(interval); }
+                var particleCount = 50 * (timeLeft / duration);
+                
+                // 左右兩邊噴發煙花
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
+                }));
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
+                }));
+            }, 250);
+        }
+
+        // --- Navigation Logic ---
+        function switchMainView(viewId, btn) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.main-nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            btn.classList.add('active');
+            window.scrollTo(0, 0);
+            
+            // 處理遊戲3的渲染循環
+            if(viewId === 'view-game3') {
+                if(!g3Initialized) initGame3();
+                g3Active = true;
+                requestAnimationFrame(game3Loop);
+            } else {
+                g3Active = false;
+            }
+        }
+
+        function switchTab(type) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.tab-btn[data-type="${type}"]`).classList.add('active');
+            
+            document.querySelectorAll('.template-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`${type}-template`).classList.add('active');
+        }
+
+        function showStep(stepId) {
+            document.getElementById(stepId).classList.add('active');
+            document.getElementById(stepId).scrollIntoView({behavior: "smooth", block: "start"});
+        }
+
+        // --- Game 1 & 2 Drag/Click Logic ---
+        let activePill = null;
+        let pilledCounts = {
+            'box-c-title': 0, 'box-c-lead': 0, 'box-c-body1': 0, 'box-c-body2': 0, 'box-c-body3': 0, 'box-c-end': 0,
+            'box-m-title': 0, 'box-m-lead': 0, 'box-m-body1': 0, 'box-m-body2': 0, 'box-m-body3': 0, 'box-m-end': 0
+        };
+
+        function selectPill(id, el) {
+            document.querySelectorAll('.info-pill').forEach(p => p.classList.remove('selected'));
+            el.classList.add('selected');
+            activePill = id;
+        }
+
+        function dropPill(boxEl, boxId, expectedIds, gameId) {
+            if (!activePill) return;
+            
+            if (expectedIds.includes(activePill)) {
+                if (document.getElementById(activePill).classList.contains('placed')) return; 
+
+                updateScore(gameId, 2, boxEl);
+                let pillEl = document.getElementById(activePill);
+                pillEl.classList.add('placed'); 
+                
+                let placedText = document.createElement('div');
+                placedText.className = 'placed-pill';
+                placedText.innerText = '✔ ' + pillEl.innerText;
+                boxEl.appendChild(placedText);
+                
+                pilledCounts[boxId]++;
+                if (pilledCounts[boxId] === expectedIds.length) {
+                    boxEl.classList.add('filled');
+                }
+                activePill = null;
+
+                if (gameId === 'g1') checkG1S1Complete();
+                if (gameId === 'g2') checkG2S1Complete();
+            } else {
+                updateScore(gameId, -1, boxEl);
+                boxEl.style.borderColor = '#ef4444';
+                boxEl.style.animation = 'shake 0.4s';
+                setTimeout(() => {
+                    boxEl.style.borderColor = '';
+                    boxEl.style.animation = '';
+                }, 400);
+            }
+        }
+
+        function checkG1S1Complete() {
+            if (pilledCounts['box-c-title'] === 1 && 
+                pilledCounts['box-c-lead'] === 5 && 
+                pilledCounts['box-c-body1'] === 1 && 
+                pilledCounts['box-c-body2'] === 1 && 
+                pilledCounts['box-c-body3'] === 1 && 
+                pilledCounts['box-c-end'] === 1) {
+                document.getElementById('btn-g1-next1').style.display = 'block';
+            }
+        }
+
+        function checkG2S1Complete() {
+            if (pilledCounts['box-m-title'] === 1 && 
+                pilledCounts['box-m-lead'] === 4 && 
+                pilledCounts['box-m-body1'] === 1 && 
+                pilledCounts['box-m-body2'] === 1 && 
+                pilledCounts['box-m-body3'] === 1 && 
+                pilledCounts['box-m-end'] === 1) {
+                document.getElementById('btn-g2-next1').style.display = 'block';
+            }
+        }
+
+        function handleSelect(el, gameId, allSelectIds) {
+            if (el.value === 'correct') {
+                updateScore(gameId, 2, el);
+                el.classList.add('correct');
+                el.classList.remove('wrong');
+                el.disabled = true;
+            } else if (el.value === 'wrong') {
+                updateScore(gameId, -1, el);
+                el.classList.add('wrong');
+                el.classList.remove('correct');
+                setTimeout(() => { el.value = ""; el.classList.remove('wrong'); }, 800);
+            }
+            
+            let allCorrect = true;
+            allSelectIds.forEach(id => {
+                let sel = document.getElementById(id);
+                if (sel && sel.value !== 'correct') {
+                    allCorrect = false;
+                }
+            });
+            if (allCorrect) {
+                document.getElementById('btn-' + gameId + '-next2').style.display = 'block';
+            }
+        }
+
+        // --- Score System ---
+        let globalScore = 0;
+        let g1Score = 0;
+        let g2Score = 0;
+        let g3Score = 0;
+
+        function updateScore(gameId, points, el) {
+            globalScore += points;
+            document.getElementById('global-score').innerText = globalScore;
+            
+            if (gameId === 'g1') {
+                g1Score += points;
+                document.getElementById('g1-score').innerText = g1Score;
+            } else if (gameId === 'g2') {
+                g2Score += points;
+                document.getElementById('g2-score').innerText = g2Score;
+            } else if (gameId === 'g3') {
+                g3Score += points;
+                document.getElementById('g3-score').innerText = g3Score;
+            }
+
+            if (el) {
+                let rect = el.getBoundingClientRect();
+                let anim = document.createElement('div');
+                anim.className = 'score-anim ' + (points > 0 ? 'score-plus' : 'score-minus');
+                anim.innerText = points > 0 ? '+' + points : points;
+                // 如果是射擊遊戲，基於容器計算動畫位置
+                if(gameId === 'g3' && el.id === 'scope') {
+                    let containerRect = document.getElementById('shooting-container').getBoundingClientRect();
+                    anim.style.left = (containerRect.left + window.scrollX + scopeX) + 'px';
+                    anim.style.top = (containerRect.top + window.scrollY + scopeY - 50) + 'px';
+                } else {
+                    anim.style.left = (rect.left + window.scrollX + rect.width / 2) + 'px';
+                    anim.style.top = (rect.top + window.scrollY) + 'px';
+                }
+                document.body.appendChild(anim);
+                setTimeout(() => anim.remove(), 1000);
+            }
+        }
+
+        function resetGame(gameId) {
+            if (gameId === 'g1') {
+                globalScore -= g1Score; g1Score = 0; document.getElementById('g1-score').innerText = '0';
+            } else if (gameId === 'g2') {
+                globalScore -= g2Score; g2Score = 0; document.getElementById('g2-score').innerText = '0';
+            }
+            document.getElementById('global-score').innerText = globalScore;
+
+            document.getElementById(gameId + '-step2').classList.remove('active');
+            document.getElementById(gameId + '-step3').classList.remove('active');
+            document.getElementById('btn-' + gameId + '-next1').style.display = 'none';
+            document.getElementById('btn-' + gameId + '-next2').style.display = 'none';
+
+            let prefix = gameId === 'g1' ? 'c' : 'm';
+            let pIds = gameId === 'g1' ? [0,1,2,3,4,5,6,7,8,9] : [0,1,2,3,4,5,7,8,9];
+            pIds.forEach(i => {
+                let pill = document.getElementById(prefix + '_p' + i);
+                if (pill) pill.classList.remove('placed', 'selected');
+            });
+
+            const boxes = ['box-'+prefix+'-title', 'box-'+prefix+'-lead', 'box-'+prefix+'-body1', 'box-'+prefix+'-body2', 'box-'+prefix+'-body3', 'box-'+prefix+'-end'];
+            boxes.forEach(boxId => {
+                let box = document.getElementById(boxId);
+                if (box) {
+                    box.classList.remove('filled');
+                    box.querySelectorAll('.placed-pill').forEach(p => p.remove());
+                }
+                pilledCounts[boxId] = 0;
+            });
+            activePill = null;
+
+            let selects = gameId === 'g1' 
+                ? ['g1-s0', 'g1-s0b', 'g1-s1', 'g1-s2', 'g1-s3', 'g1-s4', 'g1-s5', 'g1-s6', 'g1-s7', 'g1-s9', 'g1-s10', 'g1-s8']
+                : ['g2-s0', 'g2-s0b', 'g2-s1', 'g2-s1b', 'g2-s2', 'g2-s3', 'g2-s4', 'g2-s5', 'g2-s8', 'g2-s9', 'g2-s6', 'g2-s7'];
+            selects.forEach(id => {
+                let el = document.getElementById(id);
+                if (el) { el.value = ""; el.disabled = false; el.classList.remove('correct', 'wrong'); }
+            });
+            
+            document.getElementById(gameId + '-step1').scrollIntoView({behavior: "smooth"});
+        }
+
+        // ==================== Game 3 (Shooting) Logic ====================
+        const g3Questions = [
+            { textParts: ["為了", "客戶的支持，本公司特意舉辦", "晚宴。"], ans1: "答謝", ans2: "年度", options: ["答謝", "年度", "應付", "隨便", "每日"] },
+            { textParts: ["是次展覽", "了全球頂尖科技，為參觀者帶來", "體驗。"], ans1: "匯聚", ans2: "嶄新", options: ["匯聚", "嶄新", "驅散", "陳舊", "破壞"] },
+            { textParts: ["項目耗資", "打造，預計將於下月", "揭幕。"], ans1: "千萬", ans2: "盛大", options: ["千萬", "盛大", "幾百", "隨意", "草草"] },
+            { textParts: ["產品發佈會現場", "，氣氛", "熱烈。"], ans1: "人頭湧湧", ans2: "空前", options: ["人頭湧湧", "空前", "冷冷清清", "悲傷", "沉悶"] },
+            { textParts: ["新店開幕", "即創下佳績，營業額", "百萬。"], ans1: "首日", ans2: "突破", options: ["首日", "突破", "末日", "跌破", "保持"] },
+            { textParts: ["品牌破天荒與知名藝術家", "，推出", "珍藏版。"], ans1: "聯乘", ans2: "限量", options: ["聯乘", "限量", "吵架", "無限", "滯銷"] },
+            { textParts: ["顧客對新服務", "，認為設計", "。"], ans1: "讚不絕口", ans2: "別出心裁", options: ["讚不絕口", "別出心裁", "怨聲載道", "千篇一律", "枯燥乏味"] },
+            { textParts: ["展覽旨在", "本地創意文化，並提供多個", "打卡位。"], ans1: "推廣", ans2: "互動", options: ["推廣", "互動", "貶低", "靜態", "隱藏"] },
+            { textParts: ["大會特別", "各界贊助商的", "支持。"], ans1: "鳴謝", ans2: "鼎力", options: ["鳴謝", "鼎力", "責備", "微弱", "拒絕"] },
+            { textParts: ["承諾未來將", "履行企業社會責任，積極", "社會。"], ans1: "繼續", ans2: "回饋", options: ["繼續", "回饋", "停止", "索取", "破壞"] }
+        ];
+
+        let g3Initialized = false;
+        let g3Active = false;
+        let currentQIndex = 0;
+        let filledBlanks = 0; // 0, 1, 2
+        let targetsData = [];
+        let scopeX = 150, scopeY = 150;
+        let containerRect = null;
+        let moveDx = 0, moveDy = 0;
+        let hoveredTarget = null;
+        const TARGET_RADIUS = 50; // 判定範圍
+
+        function initGame3() {
+            globalScore -= g3Score; g3Score = 0;
+            document.getElementById('g3-score').innerText = '0';
+            document.getElementById('global-score').innerText = globalScore;
+            currentQIndex = 0;
+            g3Initialized = true;
+            loadG3Question();
+        }
+
+        function loadG3Question() {
+            if(currentQIndex >= g3Questions.length) {
+                document.getElementById('g3-sentence').innerHTML = "<span style='color:#10b981;'>🎉 恭喜！特訓三全部完成！</span>";
+                document.getElementById('targets-layer').innerHTML = "";
+                
+                // 觸發勝利煙花特效
+                fireworksEffect();
+                return;
+            }
+
+            filledBlanks = 0;
+            let q = g3Questions[currentQIndex];
+            document.getElementById('g3-qnum').innerText = `${currentQIndex + 1} / 10`;
+            
+            updateG3SentenceDisplay();
+
+            // 生成靶子
+            let layer = document.getElementById('targets-layer');
+            layer.innerHTML = "";
+            targetsData = [];
+            let w = document.getElementById('shooting-container').clientWidth;
+            let h = document.getElementById('shooting-container').clientHeight;
+            scopeX = w / 2; scopeY = h / 2;
+
+            q.options.forEach((opt, idx) => {
+                let el = document.createElement('div');
+                el.className = 'target-word';
+                el.innerText = opt;
+                layer.appendChild(el);
+
+                targetsData.push({
+                    text: opt,
+                    el: el,
+                    x: Math.random() * (w - 100) + 50,
+                    y: Math.random() * (h - 100) + 50,
+                    vx: (Math.random() - 0.5) * 1.5,
+                    vy: (Math.random() - 0.5) * 1.5
+                });
+            });
+        }
+
+        function updateG3SentenceDisplay() {
+            let q = g3Questions[currentQIndex];
+            let b1 = filledBlanks >= 1 ? `<span class="g3-blank filled">${q.ans1}</span>` : `<span class="g3-blank">[ 填空 1 ]</span>`;
+            let b2 = filledBlanks >= 2 ? `<span class="g3-blank filled">${q.ans2}</span>` : `<span class="g3-blank">[ 填空 2 ]</span>`;
+            
+            document.getElementById('g3-sentence').innerHTML = 
+                `${q.textParts[0]}${b1}${q.textParts[1]}${b2}${q.textParts[2]}`;
+        }
+
+        // --- Game 3 Input Handling ---
+        const sContainer = document.getElementById('shooting-container');
+        
+        sContainer.addEventListener('mousemove', (e) => {
+            if(!g3Active) return;
+            containerRect = sContainer.getBoundingClientRect();
+            scopeX = e.clientX - containerRect.left;
+            scopeY = e.clientY - containerRect.top;
+        });
+
+        sContainer.addEventListener('touchmove', (e) => {
+            if(!g3Active) return;
+            e.preventDefault(); // 防止滾動
+            containerRect = sContainer.getBoundingClientRect();
+            scopeX = e.touches[0].clientX - containerRect.left;
+            scopeY = e.touches[0].clientY - containerRect.top;
+        }, {passive: false});
+
+        function startMove(dx, dy) { moveDx = dx * 5; moveDy = dy * 5; }
+        function stopMove() { moveDx = 0; moveDy = 0; }
+
+        document.addEventListener('keydown', (e) => {
+            if(!g3Active) return;
+            if(e.key === 'ArrowUp') startMove(0, -1);
+            if(e.key === 'ArrowDown') startMove(0, 1);
+            if(e.key === 'ArrowLeft') startMove(-1, 0);
+            if(e.key === 'ArrowRight') startMove(1, 0);
+            if(e.key === ' ') { e.preventDefault(); shoot(); }
+        });
+        document.addEventListener('keyup', (e) => {
+            if(!g3Active) return;
+            if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) stopMove();
+        });
+
+        function shoot() {
+            if(!g3Active || currentQIndex >= g3Questions.length) return;
+            
+            // 播放獨立產生的射擊音效
+            playShootSound();
+
+            // 閃爍特效
+            let flash = document.getElementById('shoot-flash');
+            flash.style.opacity = '1';
+            setTimeout(() => flash.style.opacity = '0', 100);
+
+            let q = g3Questions[currentQIndex];
+            let expectedAns = filledBlanks === 0 ? q.ans1 : q.ans2;
+
+            if(hoveredTarget) {
+                if(hoveredTarget.text === expectedAns) {
+                    // 命中正確
+                    updateScore('g3', 2, document.getElementById('scope'));
+                    hoveredTarget.el.style.transform = 'translate(-50%, -50%) scale(0)';
+                    setTimeout(() => hoveredTarget.el.remove(), 200);
+                    
+                    // 從陣列移除
+                    targetsData = targetsData.filter(t => t !== hoveredTarget);
+                    hoveredTarget = null;
+                    
+                    filledBlanks++;
+                    updateG3SentenceDisplay();
+
+                    if(filledBlanks === 2) {
+                        setTimeout(() => {
+                            currentQIndex++;
+                            loadG3Question();
+                        }, 1000);
+                    }
+                } else {
+                    // 命中錯誤
+                    updateScore('g3', -1, document.getElementById('scope'));
+                    hoveredTarget.el.style.animation = 'shake 0.3s';
+                    hoveredTarget.el.style.background = '#fee2e2';
+                    hoveredTarget.el.style.borderColor = '#ef4444';
+                    setTimeout(() => {
+                        hoveredTarget.el.style.animation = '';
+                        hoveredTarget.el.style.background = '';
+                        hoveredTarget.el.style.borderColor = '';
+                    }, 400);
+                }
+            }
+        }
+
+        sContainer.addEventListener('mousedown', shoot);
+
+        // --- Game 3 Loop ---
+        function game3Loop() {
+            if(!g3Active) return;
+            
+            let w = sContainer.clientWidth;
+            let h = sContainer.clientHeight;
+
+            // D-pad movement
+            if(moveDx !== 0 || moveDy !== 0) {
+                scopeX += moveDx; scopeY += moveDy;
+            }
+            // Clamp scope
+            scopeX = Math.max(0, Math.min(w, scopeX));
+            scopeY = Math.max(0, Math.min(h, scopeY));
+
+            let scopeEl = document.getElementById('scope');
+            scopeEl.style.left = scopeX + 'px';
+            scopeEl.style.top = scopeY + 'px';
+
+            let closest = null;
+            let minDist = TARGET_RADIUS;
+
+            // Update targets
+            targetsData.forEach(t => {
+                t.x += t.vx; t.y += t.vy;
+                if(t.x <= 20 || t.x >= w - 20) t.vx *= -1;
+                if(t.y <= 20 || t.y >= h - 20) t.vy *= -1;
+                
+                t.el.style.left = t.x + 'px';
+                t.el.style.top = t.y + 'px';
+
+                // Distance to scope
+                let dx = t.x - scopeX;
+                let dy = t.y - scopeY;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+
+                if(dist < minDist) {
+                    minDist = dist;
+                    closest = t;
+                }
+            });
+
+            // Handle Hover logic
+            if(closest !== hoveredTarget) {
+                if(hoveredTarget) hoveredTarget.el.classList.remove('hovered');
+                hoveredTarget = closest;
+                if(hoveredTarget) hoveredTarget.el.classList.add('hovered');
+            }
+
+            requestAnimationFrame(game3Loop);
+        }
+
+        // --- Modals ---
+        const improveData = {
+            c_title: { title: "公益類：標題公式與詞彙", html: `<div class="improve-item"><div class="improve-phrase">💡 專業新聞詞彙庫</div><div class="improve-example"><b>📖 詞彙：</b>共襄善舉、惠澤社群、圓滿結束、打破紀錄。<br><b>📝 詞彙應用例句：</b><br>1. 逾千市民共襄善舉，為弱勢社群籌募經費。<br>2. 活動成功籌得過百萬善款，惠澤社群。</div></div><div class="improve-item"><div class="improve-phrase">📌 突顯社會意義與數據</div><div class="improve-example"><b>📖 解釋：</b>公益活動的標題應著重於「籌款數字」、「參與人數」或「社會影響」。</div></div><div class="improve-item"><div class="improve-phrase">💡 範例一：突顯善款與人潮</div><div class="improve-example"><b>📝 應用例句：</b><br>「港灣競步賽」活動圓滿結束<br>吸引三千人參與 共籌得 133 萬善款</div></div><div class="improve-item"><div class="improve-phrase">💡 套用結構示範</div><div class="improve-example"><b>📝 結構公式：</b>[主辦機構][公益活動名稱]活動 [動詞]<br><b>✨ 靈活替換：</b><br>• [愛心基金會][「寒冬送暖」]活動 [圓滿結束]<br>• [信豐集團][「點燃 60 個夢想」]活動 [順利舉行]</div></div>` },
+            c_lead: { title: "公益類：導語句式與詞彙", html: `<div class="improve-item"><div class="improve-phrase">💡 專業新聞詞彙庫</div><div class="improve-example"><b>📖 詞彙：</b>圓滿落幕、順利舉行、旨在、凝聚各界力量。<br><b>📝 詞彙應用例句：</b><br>1. 是次大型步操活動已於中環遮打花園圓滿落幕。<br>2. 計劃旨在凝聚各界力量，為獨居長者送上溫暖。</div></div><div class="improve-item"><div class="improve-phrase">📌 寫作指引：點出核心成果與目的</div><div class="improve-example"><b>📖 解釋：</b>導語除了交代5W1H，必須直接點出活動籌得的善款或受惠人數，以及活動舉辦的深層公益目的。</div></div><div class="improve-item"><div class="improve-phrase">💡 示範句式：宣告成果與目的</div><div class="improve-example"><b>📝 應用例句：</b><br>是次活動成功為醫務管理局籌得 133 萬元善款，旨在推廣「步行有益身心」的訊息，並鼓勵大眾關懷弱勢社群。</div></div><div class="improve-item"><div class="improve-phrase">💡 套用結構示範</div><div class="improve-example"><b>📝 結構公式：</b>[主辦機構] 舉辦的 [公益活動名稱] 已於 [時間] 在 [地點] 順利舉行。是次活動 [成果]，旨在 [深層目的]。<br><b>✨ 靈活替換：</b><br>• [愛心基金會] 舉辦的 [「寒冬送暖」活動] 已於 [昨日] 在 [社區中心] 順利舉行。是次活動 [籌得 30 萬善款]，旨在 [為獨居長者籌募寒衣經費]。</div></div>` },
+            c_body1: { title: "公益類：溫馨描寫秘訣與詞彙", html: `<div class="improve-item"><div class="improve-phrase">💡 專業新聞詞彙庫</div><div class="improve-example"><b>📖 詞彙：</b>身體力行、氣氛融洽、踴躍參與、守望相助。<br><b>📝 詞彙應用例句：</b><br>1. 不少家長帶同子女身體力行參與義工服務。<br>2. 現場氣氛融洽，充分展現了社區守望相助的精神。</div></div><div class="improve-item"><div class="improve-phrase">📌 交錯鋪排：意義 ✕ 溫馨互動</div><div class="improve-example"><b>📖 解釋：</b>公益活動的現場描寫應多用「溫馨」、「和諧」、「互相鼓勵」等詞彙，並描述參加者如何具體實踐公益。</div></div><div class="improve-item"><div class="improve-phrase">💡 示範句式：以行動印證意義</div><div class="improve-example"><b>📝 應用例句：</b><br>在「分享歡笑」環節中，學生義工與長者齊心合力完成大型夢想拼圖，彼此互相鼓勵，深刻體現了跨代共融的活動宗旨。</div></div><div class="improve-item"><div class="improve-phrase">💡 套用結構示範</div><div class="improve-example"><b>📝 結構公式：</b>【小標題：[社會意義]】<br>是次活動鼓勵大眾 [實踐理念]。活動當日，現場 [溫馨氛圍]。在 [重點環節] 中，參與的市民與受惠者 [互動情況]，深刻體現了活動 [呼應意義] 的宗旨。<br><b>✨ 靈活替換：</b><br>• 是次活動鼓勵大眾 [身體力行參與公益]。活動當日，現場 [氣氛融洽]。在 [織頸巾環節] 中，參與的市民與受惠者 [互相鼓勵]，深刻體現了活動 [守望相助] 的宗旨。</div></div>` },
+            c_body2: { title: "公益類：感言引述秘訣與詞彙", html: `<div class="improve-item"><div class="improve-phrase">💡 專業新聞詞彙庫</div><div class="improve-example"><b>📖 詞彙：</b>指出、透露、深受鼓舞、備受啟發、深具意義。<br><b>📝 詞彙應用例句：</b><br>1. 參與計劃的學生指出，從長者的分享中獲益匪淺。<br>2. 嘉賓的故事引起了在場人士的強烈共鳴，令人深受鼓舞。</div></div><div class="improve-item"><div class="improve-phrase">📌 寫作指引：轉述感動與啟發</div><div class="improve-example"><b>📖 解釋：</b>透過第三人稱引述參加者或受惠者的感受，強調活動對他們心靈的啟發或實質的幫助。</div></div><div class="improve-item"><div class="improve-phrase">💡 示範句式：參加者的深刻體會</div><div class="improve-example"><b>📝 應用例句：</b><br>參與計劃的伍同學受訪時指出，看到長者展現出「殘而不廢」的精神，令他深受鼓舞；他亦強調共融社會需要大眾攜手打造，從中獲益匪淺。</div></div><div class="improve-item"><div class="improve-phrase">💡 套用結構示範</div><div class="improve-example"><b>📝 結構公式：</b>【小標題：[正面迴響]】<br>參與 [焦點項目] 的 [參加者] 受訪時指出，[客觀陳述過程]，讓他 [感動/啟發]。<br><b>✨ 靈活替換：</b><br>• 參與 [探訪活動] 的 [陳伯伯] 受訪時指出，[感受到社會的關愛]，讓他 [深受鼓舞]。</div></div>` },
+            c_body3: { title: "公益類：延伸意義秘訣與詞彙", html: `<div class="improve-item"><div class="improve-phrase">💡 專業新聞詞彙庫</div><div class="improve-example"><b>📖 詞彙：</b>重點環節、周邊活動、指出、強調、透露。<br><b>📝 詞彙應用例句：</b><br>1. 除了重點環節外，大會亦安排了多項周邊活動。<br>2. 出席的主禮嘉賓指出，年輕人的熱誠令人感動。</div></div><div class="improve-item"><div class="improve-phrase">📌 交錯鋪排：周邊 ✕ 客觀點評</div><div class="improve-example"><b>📖 解釋：</b>透過描寫周邊的攤位或展覽，帶出嘉賓或受惠者對整體活動的客觀評價與未來期盼。</div></div><div class="improve-item"><div class="improve-phrase">💡 示範句式：嘉賓客觀點評</div><div class="improve-example"><b>📝 應用例句：</b><br>出席活動的評審羅女士指出，每個攤位的計劃都充滿愛心與創意；她期望社會能給予弱勢社群更多關注，將這份溫暖延續下去。</div></div><div class="improve-item"><div class="improve-phrase">💡 套用結構示範</div><div class="improve-example"><b>📝 結構公式：</b>【小標題：[延伸意義]】<br>除了主要項目，現場亦設有 [其他活動]，讓參與者 [互動情況]。出席活動的 [嘉賓] 亦表示，[客觀引述評價]，並期望 [未來願景]。<br><b>✨ 靈活替換：</b><br>• 除了主要項目，現場亦設有 [保暖衣物派發站]，讓參與者 [惠及超過一千名長者]。出席活動的 [嘉賓羅女士] 亦表示，[計劃充滿愛心與創意]，並期望 [年輕人繼續投身公益]。</div></div>` },
+            c_end: { title: "公益類：致謝與承諾", html: `<div class="improve-item"><div class="improve-phrase">💡 專業新聞詞彙庫</div><div class="improve-example"><b>📖 詞彙：</b>鼎力支持、慷慨解囊、積極履行社會責任、回饋社會、再接再厲。<br><b>📝 詞彙應用例句：</b><br>1. 主辦方特別鳴謝各界善長的鼎力支持與慷慨解囊。<br>2. 集團承諾將繼續積極履行社會責任，回饋社會。</div></div><div class="improve-item"><div class="improve-phrase">📌 寫作指引：主辦方的社會責任</div><div class="improve-example"><b>📖 解釋：</b>結尾必須由主辦機構代表出面，感謝捐款人及義工，並承諾會繼續回饋社會。</div></div><div class="improve-item"><div class="improve-phrase">💡 示範句式：致謝與願景</div><div class="improve-example"><b>📝 應用例句：</b><br>信豐集團副主席在總結致辭時，特別鳴謝各界市民的鼎力支持。他強調，集團將繼續秉守誠信，積極履行社會責任，承諾來年再接再厲舉辦更多有益社會的活動。</div></div><div class="improve-item"><div class="improve-phrase">💡 套用結構示範</div><div class="improve-example"><b>📝 結構公式：</b>【小標題：[總結致謝]】<br>[主辦機構] 代表 [姓名] 在總結致辭時，特別鳴謝 [感謝對象]。他透露，集團將繼續秉守誠信，[企業願景]，並承諾來年會再接再厲，舉辦更多有益社會的活動。<br><b>✨ 靈活替換：</b><br>• [信豐集團] 代表 [孟海楊先生] 在總結致辭時，特別鳴謝 [各協辦機構及慷慨解囊的市民]。他透露，集團將繼續秉守誠信，[積極履行社會責任]...</div></div>` },
+            m_title: { title: "商業類：標題公式與詞彙", html: `<div class="improve-item"><div class="improve-phrase">💡 專業新聞詞彙庫</div><div class="improve-example"><b>📖 詞彙：</b>首度登陸、強勢推出、破天荒、矚目登場、引發熱潮。<br><b>📝 詞彙應用例句：</b><br>1. 全港首個室內冰雪樂園首度登陸旺角。<br>2. 品牌破天荒聯乘海外藝術家，引發搶購熱潮。</div></div><div class="improve-item"><div class="improve-phrase">📌 突顯獨特性與吸引力</div><div class="improve-example"><b>📖 解釋：</b>商業活動的標題必須有「噱頭」，強調「首創」、「最大」、「耗資千萬」或「吸引萬人」等賣點。</div></div><div class="improve-item"><div class="improve-phrase">💡 範例一：突顯規模與獨特性</div><div class="improve-example"><b>📝 應用例句：</b><br>新都會廣場耗資千萬打造都市農莊<br>全港首個全天候都會綠洲正式開幕</div></div><div class="improve-item"><div class="improve-phrase">💡 套用結構示範</div><div class="improve-example"><b>📝 結構公式：</b>[機構名稱] [推出/首創] [商業活動/產品名稱]<br><b>✨ 靈活替換：</b><br>• [星際科技] 首創 [AI 太空艙體驗展]<br>• [新都會廣場] 推出 [全港首個全天候都市農莊]</div></div>` },
+            m_lead: { title: "商業類：導語句式與詞彙", html: `<div class="improve-item"><div class="improve-phrase">💡 專業新聞詞彙庫</div><div class="improve-example"><b>📖 詞彙：</b>盛大揭幕、隆重舉行、耗資千萬、嶄新體驗。<br><b>📝 詞彙應用例句：</b><br>1. 耗資千萬打造的旗艦店於昨日盛大揭幕。<br>2. 活動為市民帶來結合科技與藝術的嶄新體驗。</div></div><div class="improve-item"><div class="improve-phrase">📌 寫作指引：包裝商業宣傳</div><div class="improve-example"><b>📖 解釋：</b>即使是商業宣傳，導語也要寫得像新聞。交代5W1H時，自然地帶出活動的規模與賣點，吸引讀者往下看。</div></div><div class="improve-item"><div class="improve-phrase">💡 示範句式：介紹規模與目的</div><div class="improve-example"><b>📝 應用例句：</b><br>為讓繁忙的都市人享受另類的休閒生活，新地集團耗資 2000 萬打造的「都市農莊」於昨日盛大揭幕。現場設有多項體驗，吸引大批市民踴躍參與。</div></div><div class="improve-item"><div class="improve-phrase">💡 套用結構示範</div><div class="improve-example"><b>📝 結構公式：</b>為 [商業目的]，[主辦機構] 舉辦的 [商業活動名稱] 於 [時間] 在 [地點] 盛大揭幕。<br><b>✨ 靈活替換：</b><br>• 為 [市民帶來嶄新體驗]，[星際科技] 舉辦的 [AI 體驗展] 於 [昨日] 盛大揭幕。</div></div>` },
+            m_body1: { title: "商業類：盛況描寫秘訣與詞彙", html: `<div class="improve-item"><div class="improve-phrase">💡 專業新聞詞彙庫</div><div class="improve-example"><b>📖 詞彙：</b>人頭湧湧、水洩不通、爭相體驗、氣氛高漲。<br><b>📝 詞彙應用例句：</b><br>1. 開幕首日現場人頭湧湧，場面熱鬧，水洩不通。<br>2. 大批市民爭相體驗最新推出的虛擬實境遊戲，氣氛高漲。</div></div><div class="improve-item"><div class="improve-phrase">📌 交錯鋪排：賣點 ✕ 熱烈反應</div><div class="improve-example"><b>📖 解釋：</b>先介紹活動最吸引人的設施或節目，緊接著描寫群眾「排隊」或「歡呼」的活潑畫面，以群眾的反應來證實活動的成功。</div></div><div class="improve-item"><div class="improve-phrase">💡 示範句式：以人潮印證吸引力</div><div class="improve-example"><b>📝 應用例句：</b><br>活動的重點環節「街頭水戰」為市民帶來嶄新體驗。活動現場人頭湧湧，不少市民有備而來，大家均玩得不亦樂乎，氣氛高漲。</div></div><div class="improve-item"><div class="improve-phrase">💡 套用結構示範</div><div class="improve-example"><b>📝 結構公式：</b>【小標題：[賣點] + [動態]】<br>活動的重點環節 [最具吸引力的環節]，為市民帶來 [特色體驗]。開幕首日現場 [熱烈盛況]，大家均 [情緒描述]。<br><b>✨ 靈活替換：</b><br>• 重點環節 [虛擬實境太空艙]，為市民帶來 [震撼視覺體驗]。開幕首日現場 [人頭湧湧]，大家均 [大開眼界]。</div></div>` },
+            m_body2: { title: "商業類：好評引述秘訣與詞彙", html: `<div class="improve-item"><div class="improve-phrase">💡 專業新聞詞彙庫</div><div class="improve-example"><b>📖 詞彙：</b>指出、表示、大開眼界、流連忘返。<br><b>📝 詞彙應用例句：</b><br>1. 受訪顧客指出，產品的創新設計令人耳目一新。<br>2. 現場豐富的展品讓參觀者大開眼界，流連忘返。</div></div><div class="improve-item"><div class="improve-phrase">📌 寫作指引：借用客人口吻推銷</div><div class="improve-example"><b>📖 解釋：</b>商業新聞稿切忌自己說自己好。應該透過第三人稱，轉述顧客（參加者）的正面評價，增加說服力。</div></div><div class="improve-item"><div class="improve-phrase">💡 示範句式：轉述顧客的好評</div><div class="improve-example"><b>📝 應用例句：</b><br>第一次參加的陳小姐受訪時指出，活動的互動環節十分刺激，讓人大開眼界，並表示明年一定會與朋友再來參與。</div></div><div class="improve-item"><div class="improve-phrase">💡 套用結構示範</div><div class="improve-example"><b>📝 結構公式：</b>【小標題：[好評焦點]】<br>在 [另一主打環節] 中，大批市民 [動態]。第一次參加的 [參加者] 受訪時指出，[客觀陳述]，讓人 [評價感受]。<br><b>✨ 靈活替換：</b><br>• 在 [街頭水戰] 中，大批市民 [互相潑水]。第一次參加的 [張小姐] 指出，[視覺效果震撼]，讓人 [大開眼界]。</div></div>` },
+            m_body3: { title: "商業類：延伸體驗秘訣與詞彙", html: `<div class="improve-item"><div class="improve-phrase">💡 專業新聞詞彙庫</div><div class="improve-example"><b>📖 詞彙：</b>琳瑯滿目、別出心裁、滿載而歸、寓教於樂、駐足觀賞。<br><b>📝 詞彙應用例句：</b><br>1. 市集內售賣的特色商品琳瑯滿目，吸引大批市民駐足觀賞。<br>2. 參與家庭大讚工作坊設計別出心裁，讓他們寓教於樂，滿載而歸。</div></div><div class="improve-item"><div class="improve-phrase">📌 交錯鋪排：周邊 ✕ 滿載而歸</div><div class="improve-example"><b>📖 解釋：</b>描寫主舞台以外的工作坊或打卡位，展現活動的多元性，並引用家庭客或一般市民的客觀評價作結。</div></div><div class="improve-item"><div class="improve-phrase">💡 示範句式：家庭客的客觀評價</div><div class="improve-example"><b>📝 應用例句：</b><br>主辦機構更特設「綠色工作坊」，不少市民一家大小親手製作紀念品。帶同孩子參與的張先生認為，活動寓教於樂，設計別出心裁，讓他們度過了一個充實的週末，滿載而歸。</div></div><div class="improve-item"><div class="improve-phrase">💡 套用結構示範</div><div class="improve-example"><b>📝 結構公式：</b>【小標題：[延伸亮點]】<br>除了主要項目，更特設 [周邊活動]，吸引市民 [動態描述]。帶同孩子參與的 [參加者] 認為，[轉述客觀評價]，讓他們 [總結體驗]。<br><b>✨ 靈活替換：</b><br>• 特設 [星際打卡區]，吸引大批家庭客 [駐足拍照]。[張先生] 認為，[活動設計別出心裁]，讓他們 [滿載而歸]。</div></div>` },
+            m_end: { title: "商業類：新聞客觀推廣秘訣與詞彙", html: `<div class="improve-item"><div class="improve-phrase">💡 專業新聞詞彙庫</div><div class="improve-example"><b>📖 詞彙：</b>提供、展出、延長開放、設有、歡迎市民蒞臨。<br><b>📝 詞彙應用例句：</b><br>1. 為讓更多市民參觀，展覽將延長開放至下月底。<br>2. 同場更設有多個互動打卡位，供市民參觀。</div></div><div class="improve-item"><div class="improve-phrase">📌 寫作指引：客觀列出資訊取代廣告推銷</div><div class="improve-example"><b>📖 解釋：</b>商業新聞稿的結尾<b>絕對不能</b>使用「快來買」、「獨家大優惠」等推銷字眼！應改為<b>客觀陳述後續的活動安排與展出內容</b>，提供資訊讓讀者自行前往。</div></div><div class="improve-item"><div class="improve-phrase">💡 示範句式：客觀帶出後續活動</div><div class="improve-example"><b>📝 應用例句：</b><br>為讓更多市民體驗，商場將於一連四個週末舉辦「低碳生活市集」，提供即製素食、健康食品及綠色環保產品，供市民休閒參觀，並延長開放至晚上九時。</div></div><div class="improve-item"><div class="improve-phrase">💡 套用結構示範</div><div class="improve-example"><b>📝 結構公式：</b>【小標題：[後續活動]】<br>[主辦機構] 代表表示感謝。為讓更多市民參與，大會將於 [時間] 舉辦 [相關延伸活動]，並 [客觀提供活動資訊]，供市民 [客觀行動]。<br><b>✨ 靈活替換：</b><br>• 為讓更多市民參與，大會將 [延長開放至下月底]，並 [提供多個打卡位]，供市民 [參觀體驗]。</div></div>` }
+        };
+
+        function openModal(section) {
+            const modal = document.getElementById('improve-modal');
+            const data = improveData[section];
+            document.getElementById('im-title').innerText = "自我增值：" + data.title;
+            const contentBox = document.getElementById('im-content');
+            contentBox.innerHTML = data.html;
+            
+            contentBox.querySelectorAll('.improve-item').forEach(item => {
+                item.onclick = function() { this.classList.toggle('open'); };
+            });
+            modal.style.display = 'flex';
+        }
+
+        function closeModalWindow() {
+            document.getElementById('improve-modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
